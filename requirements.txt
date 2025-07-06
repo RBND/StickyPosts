@@ -1,0 +1,4 @@
+PyQt6>=6.4.0
+cryptography>=3.4.8
+pywin32>=305
+pynput>=1.7.6 

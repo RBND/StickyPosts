@@ -134,7 +134,7 @@ python stickyposts.py
 
 - **OS**: Windows 11 (or Windows 10)
 - **Python**: 3.8 or higher
-- **Dependencies**: See `[requirements.txt](requirements.txt)`
+- **Dependencies**: See [requirements.txt](requirements.txt)
 
 ## 🔄 Updates
 

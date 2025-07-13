@@ -94,6 +94,7 @@ def load_settings():
                 'note_text_color': NOTE_TEXT_COLOR,  # Add note text color to defaults
                 'note_text_size': NOTE_TEXT_SIZE,  # Add note text size to defaults
                 'note_font_family': NOTE_FONT_FAMILY,  # Add note font family to defaults
+                'hide_terminal': True,  # Default to hide terminal window
             }
             # Update with any missing keys
             for key, default_value in default_settings.items():
@@ -112,6 +113,7 @@ def load_settings():
         'note_text_color': NOTE_TEXT_COLOR,  # Add note text color to defaults
         'note_text_size': NOTE_TEXT_SIZE,  # Add note text size to defaults
         'note_font_family': NOTE_FONT_FAMILY,  # Add note font family to defaults
+        'hide_terminal': True,  # Default to hide terminal window
     }
 
 def verify_encryption_password():
@@ -715,6 +717,11 @@ class StickyNotesApp(QApplication):
         
         self.settings = load_settings()
         
+        # Hide terminal window if setting is enabled
+        if self.settings.get('hide_terminal', True):
+            import ctypes
+            ctypes.windll.user32.ShowWindow(ctypes.windll.kernel32.GetConsoleWindow(), 0)
+        
         # Check if password prompt is required on startup
         if (self.settings.get('encrypt_notes', False) and 
             self.settings.get('prompt_password_on_startup', False)):
@@ -1164,6 +1171,10 @@ class SettingsDialog(QDialog):
         self.reopen_cb = QCheckBox('Reopen notes on startup')
         self.reopen_cb.setChecked(settings['reopen_notes'])
         general_layout.addWidget(self.reopen_cb)
+        # Hide terminal window
+        self.hide_terminal_cb = QCheckBox('Hide terminal window on launch')
+        self.hide_terminal_cb.setChecked(settings.get('hide_terminal', True))
+        general_layout.addWidget(self.hide_terminal_cb)
         # Tray icon theme
         icon_theme_label = QLabel('System tray icon theme:')
         general_layout.addWidget(icon_theme_label)
@@ -1517,6 +1528,7 @@ class SettingsDialog(QDialog):
             'note_text_color': getattr(self, 'selected_text_color', NOTE_TEXT_COLOR),
             'note_text_size': self.text_size_spin.value(),
             'note_font_family': self.font_combo.currentText(),
+            'hide_terminal': self.hide_terminal_cb.isChecked(),
         }
         return result
 
